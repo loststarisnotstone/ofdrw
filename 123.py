@@ -1,24 +1,10 @@
-import os
-import ofdrw
-import pdfkit
-import pypandoc
+import jpype
 
-# OFD 转 PDF
-input_ofd = 'c:\\111.ofd'
-output_pdf = 'c:\\output.pdf'
+# 启动 JVM，指定 JAR 文件路径
+jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.class.path=C:/Users/liugu/Documents/GitHub/ofdrw/ofdrw.jar")
 
-with open(input_ofd, 'rb') as ofd_file:
-    document = ofdrw.OFDDocument(ofd_file)
-    pdf_data = document.to_pdf()
+# 导入 OFDDocument 类
+OFDDocument = jpype.JClass("org.ofdrw.core.OFDDocument")
 
-with open(output_pdf, 'wb') as pdf_file:
-    pdf_file.write(pdf_data)
-
-# PDF 转 DOCX
-output_docx = 'output.docx'
-pypandoc.convert_file(output_pdf, 'docx', outputfile=output_docx)
-
-# 清理临时 PDF 文件
-os.remove(output_pdf)
-
-print("转换完成！")
+# 使用 OFDDocument 类进行操作
+document = OFDDocument("example.ofd")
